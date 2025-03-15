@@ -1,0 +1,30 @@
+[build-system]
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "py-zip-rs"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+
+[tool.uv]
+cache-keys = [{file = "pyproject.toml"}, {file = "Cargo.toml"}, {file = "src/*.rs"}]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "py_zip_rs._rust"
+python-source = "python_src"
+
+[tool.pytest.ini_options]
+testpaths = ["python_src"]
+python_files = ["test_*.py", "test.py"]
+
+[dependency-groups]
+dev = [
+  "pytest >=8.1.1,<9"
+]
