@@ -93,6 +93,7 @@ impl PyZipWriter {
 
     /// Context manager exit
     #[allow(unused_variables)]
+    #[pyo3(signature = (exc_type = None, exc_value = None, traceback = None))]
     fn __exit__(
         &mut self,
         exc_type: Option<PyObject>,

@@ -110,6 +110,25 @@ You can also run the test script directly:
 python python_src/test.py
 ```
 
+## Development
+
+### Pre-commit Hooks
+
+This project uses pre-commit hooks to ensure code quality. The hooks include:
+
+- Ruff for Python linting and formatting
+- cargo fmt for Rust formatting
+
+To set up the pre-commit hooks:
+
+```bash
+# Install pre-commit and set up the hooks
+./setup-hooks.sh
+
+# Run the hooks manually on all files
+pre-commit run --all-files
+```
+
 ## Compatibility
 
 The ZIP files created with this library using ZipCrypto encryption are compatible with most ZIP utilities that support password protection, including:
