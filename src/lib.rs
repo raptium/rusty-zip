@@ -9,7 +9,7 @@ use zip::{write::FileOptions, CompressionMethod};
 #[pyclass(name = "ZipWriter")]
 struct PyZipWriter {
     writer: Option<zip::ZipWriter<std::fs::File>>,
-    password: Option<String>,
+    password: Option<Vec<u8>>,
 }
 
 #[pymethods]
@@ -17,13 +17,13 @@ impl PyZipWriter {
     /// Create a new ZIP file with optional password for ZipCrypto encryption
     #[new]
     #[pyo3(signature = (path, password = None))]
-    fn new(path: &str, password: Option<String>) -> PyResult<Self> {
+    fn new(path: &str, password: Option<&[u8]>) -> PyResult<Self> {
         let file = File::create(path).map_err(|e| PyIOError::new_err(e.to_string()))?;
         let writer = zip::ZipWriter::new(file);
 
         Ok(PyZipWriter {
             writer: Some(writer),
-            password: password,
+            password: password.map(|p| p.to_vec()),
         })
     }
 
@@ -113,7 +113,7 @@ impl PyZipWriter {
         if let Some(password) = &self.password {
             // Use the legacy ZipCrypto encryption from the unstable API
             // This is available without enabling a feature flag
-            options = options.with_deprecated_encryption(password.as_bytes());
+            options = options.with_deprecated_encryption(password);
         }
 
         options

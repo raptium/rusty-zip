@@ -48,7 +48,7 @@ class TestZipWriter:
         """Test creating a ZIP file with password."""
         test_file_path, zip_path = setup_files
 
-        password = "secret"
+        password = b"secret"
         with ZipWriter(zip_path, password=password) as zip_file:
             zip_file.write_file(test_file_path, "test.txt")
             zip_file.write_bytes(b"Memory content", "memory.txt")
@@ -59,14 +59,9 @@ class TestZipWriter:
         # Verify we can open it with standard zipfile module
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             assert zip_ref.namelist() == ["test.txt", "memory.txt"]
-            assert (
-                zip_ref.read("test.txt", pwd=password.encode("utf-8")).decode("utf-8")
-                == "Test content"
-            )
-            assert (
-                zip_ref.read("memory.txt", pwd=password.encode("utf-8")).decode("utf-8")
-                == "Memory content"
-            )
+            zip_ref.setpassword(password)
+            assert zip_ref.read("test.txt").decode("utf-8") == "Test content"
+            assert zip_ref.read("memory.txt").decode("utf-8") == "Memory content"
 
     def test_context_manager(self, setup_files):
         """Test that the context manager properly closes the file."""
@@ -100,7 +95,7 @@ class TestZipWriter:
         """Test that an error is raised when trying to use a closed writer."""
         _, zip_path = setup_files
 
-        zip_file = ZipWriter(zip_path, "secret")
+        zip_file = ZipWriter(zip_path, b"secret")
         zip_file.close()
 
         # Trying to write to a closed writer should raise an error
