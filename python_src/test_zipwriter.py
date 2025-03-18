@@ -103,3 +103,49 @@ class TestZipWriter:
             zip_file.write_bytes(b"Test data", "test.txt")
 
         assert "closed" in str(excinfo.value).lower()
+
+    def test_file_like_object_support(self, setup_files):
+        """Test creating a ZIP file using a file-like object."""
+        from io import BytesIO
+
+        # Create a BytesIO object to simulate a file-like object
+        file_like = BytesIO()
+        test_file_path, _ = setup_files
+
+        # Create ZIP using file-like object
+        with ZipWriter(file_like) as zip_file:
+            zip_file.write_file(test_file_path, "test.txt")
+            zip_file.write_bytes(b"Memory content", "memory.txt")
+
+        # Get the ZIP content from BytesIO
+        zip_content = file_like.getvalue()
+
+        # Verify we can open it with standard zipfile module
+        with zipfile.ZipFile(BytesIO(zip_content), "r") as zip_ref:
+            assert zip_ref.namelist() == ["test.txt", "memory.txt"]
+            assert zip_ref.read("test.txt").decode("utf-8") == "Test content"
+            assert zip_ref.read("memory.txt").decode("utf-8") == "Memory content"
+
+    def test_file_like_object_with_password(self, setup_files):
+        """Test creating a password-protected ZIP file using a file-like object."""
+        from io import BytesIO
+
+        # Create a BytesIO object to simulate a file-like object
+        file_like = BytesIO()
+        test_file_path, _ = setup_files
+        password = b"secret"
+
+        # Create password-protected ZIP using file-like object
+        with ZipWriter(file_like, password=password) as zip_file:
+            zip_file.write_file(test_file_path, "test.txt")
+            zip_file.write_bytes(b"Memory content", "memory.txt")
+
+        # Get the ZIP content from BytesIO
+        zip_content = file_like.getvalue()
+
+        # Verify we can open it with standard zipfile module
+        with zipfile.ZipFile(BytesIO(zip_content), "r") as zip_ref:
+            assert zip_ref.namelist() == ["test.txt", "memory.txt"]
+            zip_ref.setpassword(password)
+            assert zip_ref.read("test.txt").decode("utf-8") == "Test content"
+            assert zip_ref.read("memory.txt").decode("utf-8") == "Memory content"

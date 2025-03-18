@@ -1,6 +1,6 @@
 [package]
 name = "rusty-zip"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 edition = "2021"
 description = "Python wrapper for Rust's zip crate with legacy ZipCrypto encryption support"
 authors = ["Hao Guan <gh@raptium.net>"]
@@ -17,4 +17,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0", features = ["extension-module"] }
+pyo3-file = "0.11.0"
 zip = { version = "=2.2.3" }

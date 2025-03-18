@@ -1,14 +1,66 @@
 use pyo3::exceptions::PyIOError;
 use pyo3::prelude::*;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::{Read, Seek, SeekFrom, Write};
 use zip::unstable::write::FileOptionsExt;
 use zip::{write::FileOptions, CompressionMethod};
+
+use pyo3::types::PyString;
+use pyo3_file::PyFileLikeObject;
+
+enum InnerWriter {
+    File(File),
+    FileLike(PyFileLikeObject),
+}
+
+impl InnerWriter {
+    pub fn new(path_or_file_like: PyObject) -> PyResult<InnerWriter> {
+        Python::with_gil(|py| {
+            // is a path
+            if let Ok(string_ref) = path_or_file_like.downcast_bound::<PyString>(py) {
+                let file = File::create(string_ref.to_string_lossy().to_string())
+                    .map_err(|e| PyIOError::new_err(e.to_string()))?;
+                return Ok(InnerWriter::File(file));
+            }
+
+            // is a file-like
+            match PyFileLikeObject::with_requirements(path_or_file_like, false, true, true, false) {
+                Ok(f) => Ok(InnerWriter::FileLike(f)),
+                Err(e) => Err(e),
+            }
+        })
+    }
+}
+
+impl Write for InnerWriter {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        match self {
+            InnerWriter::File(file) => file.write(buf),
+            InnerWriter::FileLike(file_like) => file_like.write(buf),
+        }
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self {
+            InnerWriter::File(file) => file.flush(),
+            InnerWriter::FileLike(file_like) => file_like.flush(),
+        }
+    }
+}
+
+impl Seek for InnerWriter {
+    fn seek(&mut self, pos: SeekFrom) -> std::io::Result<u64> {
+        match self {
+            InnerWriter::File(file) => file.seek(pos),
+            InnerWriter::FileLike(file_like) => file_like.seek(pos),
+        }
+    }
+}
 
 /// A Python wrapper for Rust's zip crate with ZipCrypto support
 #[pyclass(name = "ZipWriter")]
 struct PyZipWriter {
-    writer: Option<zip::ZipWriter<std::fs::File>>,
+    writer: Option<zip::ZipWriter<InnerWriter>>,
     password: Option<Vec<u8>>,
 }
 
@@ -16,13 +68,11 @@ struct PyZipWriter {
 impl PyZipWriter {
     /// Create a new ZIP file with optional password for ZipCrypto encryption
     #[new]
-    #[pyo3(signature = (path, password = None))]
-    fn new(path: &str, password: Option<&[u8]>) -> PyResult<Self> {
-        let file = File::create(path).map_err(|e| PyIOError::new_err(e.to_string()))?;
-        let writer = zip::ZipWriter::new(file);
-
+    #[pyo3(signature = (path_or_file_like, password = None))]
+    fn new(path_or_file_like: PyObject, password: Option<&[u8]>) -> PyResult<Self> {
+        let inner_writer = InnerWriter::new(path_or_file_like)?;
         Ok(PyZipWriter {
-            writer: Some(writer),
+            writer: Some(zip::ZipWriter::new(inner_writer)),
             password: password.map(|p| p.to_vec()),
         })
     }
