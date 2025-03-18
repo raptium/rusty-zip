@@ -65,7 +65,7 @@ zip_content = file_like.getvalue()
 
 #### Constructor
 
-- `ZipWriter(path: str, password: Optional[bytes] = None)` - Creates a new ZIP file at the specified path. If a password is provided, files will be encrypted using ZipCrypto. The password must be bytes.
+- `ZipWriter(path_or_file_like: Union[str, BinaryIO], password: Optional[bytes] = None)` - Creates a new ZIP file. The first argument can be either a path string or a file-like object that supports binary I/O operations. If a password is provided, files will be encrypted using ZipCrypto. The password must be bytes.
 
 #### Methods
 
@@ -77,6 +77,7 @@ zip_content = file_like.getvalue()
 
 - Create ZIP files with legacy ZipCrypto encryption
 - Add files from disk or memory
+- Support for both file paths and file-like objects
 - Simple Python API with Rust performance
 - Cross-platform compatibility
 
