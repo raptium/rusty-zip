@@ -75,7 +75,7 @@ with ZipWriter("example.zip", password=b"mypassword") as zip_file:
 ### Building from Source
 
 ```bash
-uv run build
+uv build
 ```
 
 ### Running Tests

@@ -1,6 +1,6 @@
 [package]
 name = "rusty-zip"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
 edition = "2021"
 description = "Python wrapper for Rust's zip crate with legacy ZipCrypto encryption support"
 authors = ["Hao Guan <gh@raptium.net>"]

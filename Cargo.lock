@@ -510,7 +510,7 @@ dependencies = [
 
 [[package]]
 name = "rusty-zip"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
 dependencies = [
  "pyo3",
  "zip",
