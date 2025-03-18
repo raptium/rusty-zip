@@ -123,7 +123,7 @@ impl PyZipWriter {
 /// A Python module implemented in Rust.
 #[pymodule]
 #[pyo3(name = "_rust")]
-fn py_zip_rs(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn rustyzip(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyZipWriter>()?;
     Ok(())
 }

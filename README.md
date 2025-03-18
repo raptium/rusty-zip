@@ -1,4 +1,4 @@
-# py-zip-rs
+# RustyZip
 
 A Python wrapper for Rust's `zip` crate that exposes a ZIP file writer with legacy ZipCrypto encryption support.
 
@@ -17,13 +17,13 @@ This library uses the unstable API of the Rust `zip` crate to access the legacy 
 ## Installation
 
 ```bash
-pip install py-zip-rs
+pip install rustyzip
 ```
 
 ## Usage
 
 ```python
-from py_zip_rs import ZipWriter
+from rustyzip import ZipWriter
 
 # Create a new encrypted ZIP file with ZipCrypto
 with ZipWriter("example.zip", password="mypassword") as zip_file:
@@ -71,8 +71,8 @@ with ZipWriter("example.zip", password="mypassword") as zip_file:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/py-zip-rs.git
-cd py-zip-rs
+git clone https://github.com/yourusername/rustyzip.git
+cd rustyzip
 
 # Install development dependencies
 pip install -r requirements-dev.txt
@@ -101,7 +101,7 @@ You can run the tests using pytest:
 pytest
 
 # Run tests with coverage report
-pytest --cov=py_zip_rs
+pytest --cov=rustyzip
 ```
 
 You can also run the test script directly:

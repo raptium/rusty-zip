@@ -1,18 +1,18 @@
 [package]
-name = "py-zip-rs"
+name = "rusty-zip"
 version = "0.1.0"
 edition = "2021"
 description = "Python wrapper for Rust's zip crate with legacy ZipCrypto support"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Hao Guan <gh@raptium.net>"]
 license = "MIT"
-repository = "https://github.com/yourusername/py-zip-rs"
+repository = "https://github.com/raptium/rusty-zip"
 readme = "README.md"
 keywords = ["python", "zip", "compression", "zipcrypto", "pyo3"]
 categories = ["compression", "api-bindings"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-name = "py_zip_rs"
+name = "rusty_zip"
 crate-type = ["cdylib"]
 
 [dependencies]

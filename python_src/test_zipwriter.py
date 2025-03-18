@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pytest tests for py-zip-rs.
+Pytest tests for rustyzip.
 """
 
 import os
@@ -8,7 +8,7 @@ import tempfile
 import zipfile
 
 import pytest
-from py_zip_rs import ZipWriter
+from rusty_zip import ZipWriter
 
 
 class TestZipWriter:
