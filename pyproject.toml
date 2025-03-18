@@ -5,7 +5,20 @@ build-backend = "maturin"
 [project]
 name = "rusty-zip"
 requires-python = ">=3.9"
+description = "Python wrapper for Rust's zip crate with legacy ZipCrypto encryption support"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Hao Guan", email = "gh@raptium.net" }
+]
+maintainers = [
+    { name = "Hao Guan", email = "gh@raptium.net" }
+]
+keywords = ["zip", "compression", "zipcrypto", "rust"]
 classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -13,6 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Archiving :: Compression",
 ]
 dynamic = ["version"]
 dependencies = [
