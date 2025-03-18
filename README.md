@@ -35,6 +35,7 @@ pip install rusty-zip
 
 ```python
 from rusty_zip import ZipWriter
+from io import BytesIO
 
 # Create a new encrypted ZIP file with ZipCrypto
 with ZipWriter("example.zip", password=b"mypassword") as zip_file:
@@ -47,6 +48,15 @@ with ZipWriter("example.zip", password=b"mypassword") as zip_file:
     # If you have a string, convert it to bytes first
     text = "This is a string"
     zip_file.write_bytes(text.encode('utf-8'), "string.txt")
+
+# You can also use file-like objects
+file_like = BytesIO()
+with ZipWriter(file_like) as zip_file:
+    zip_file.write_file("path/to/file.txt", "file.txt")
+    zip_file.write_bytes(b"Hello, world!", "hello.txt")
+
+# Get the ZIP content from the file-like object
+zip_content = file_like.getvalue()
 ```
 
 ## API Reference
