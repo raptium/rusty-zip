@@ -17,5 +17,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0", features = ["extension-module"] }
-pyo3-file = "0.11.0"
+pyo3-file = "0.17.0"
 zip = { version = "=2.2.3" }
