@@ -2,10 +2,6 @@ version = 1
 revision = 3
 requires-python = ">=3.9"
 
-[options]
-exclude-newer = "2026-09-03T08:21:16.564881Z"
-exclude-newer-span = "P7D"
-
 [[package]]
 name = "cfgv"
 version = "3.4.0"
