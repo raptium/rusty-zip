@@ -14,10 +14,10 @@ enum InnerWriter {
 }
 
 impl InnerWriter {
-    pub fn new(path_or_file_like: PyObject) -> PyResult<InnerWriter> {
-        Python::with_gil(|py| {
+    pub fn new(path_or_file_like: Py<PyAny>) -> PyResult<InnerWriter> {
+        Python::attach(|py| {
             // is a path
-            if let Ok(string_ref) = path_or_file_like.downcast_bound::<PyString>(py) {
+            if let Ok(string_ref) = path_or_file_like.cast_bound::<PyString>(py) {
                 let file = File::create(string_ref.to_string_lossy().to_string())
                     .map_err(|e| PyIOError::new_err(e.to_string()))?;
                 return Ok(InnerWriter::File(file));
@@ -69,7 +69,7 @@ impl PyZipWriter {
     /// Create a new ZIP file with optional password for ZipCrypto encryption
     #[new]
     #[pyo3(signature = (path_or_file_like, password = None))]
-    fn new(path_or_file_like: PyObject, password: Option<&[u8]>) -> PyResult<Self> {
+    fn new(path_or_file_like: Py<PyAny>, password: Option<&[u8]>) -> PyResult<Self> {
         let inner_writer = InnerWriter::new(path_or_file_like)?;
         Ok(PyZipWriter {
             writer: Some(zip::ZipWriter::new(inner_writer)),
@@ -146,9 +146,9 @@ impl PyZipWriter {
     #[pyo3(signature = (exc_type = None, exc_value = None, traceback = None))]
     fn __exit__(
         &mut self,
-        exc_type: Option<PyObject>,
-        exc_value: Option<PyObject>,
-        traceback: Option<PyObject>,
+        exc_type: Option<Py<PyAny>>,
+        exc_value: Option<Py<PyAny>>,
+        traceback: Option<Py<PyAny>>,
     ) -> PyResult<bool> {
         self.close()?;
         Ok(false)
