@@ -1,4 +1,4 @@
-use pyo3::exceptions::PyIOError;
+use pyo3::exceptions::{PyIOError, PyValueError};
 use pyo3::prelude::*;
 use std::fs::File;
 use std::io::{Read, Seek, SeekFrom, Write};
@@ -70,6 +70,15 @@ impl PyZipWriter {
     #[new]
     #[pyo3(signature = (path_or_file_like, password = None))]
     fn new(path_or_file_like: Py<PyAny>, password: Option<&[u8]>) -> PyResult<Self> {
+        // An empty ZipCrypto password derives a predictable key, so zip >= 3
+        // rejects it. Check it here as well, to fail before creating the file
+        // and to raise a clearer error than zip's own wording.
+        if password.is_some_and(|p| p.is_empty()) {
+            return Err(PyValueError::new_err(
+                "ZipCrypto password must not be empty",
+            ));
+        }
+
         let inner_writer = InnerWriter::new(path_or_file_like)?;
         Ok(PyZipWriter {
             writer: Some(zip::ZipWriter::new(inner_writer)),
@@ -91,7 +100,7 @@ impl PyZipWriter {
         file.read_to_end(&mut buffer)
             .map_err(|e| PyIOError::new_err(format!("Failed to read source file: {}", e)))?;
 
-        let options = self.get_file_options();
+        let options = self.get_file_options()?;
 
         writer
             .start_file(entry_name, options)
@@ -112,7 +121,7 @@ impl PyZipWriter {
             .take()
             .ok_or_else(|| PyIOError::new_err("ZipWriter is closed"))?;
 
-        let options = self.get_file_options();
+        let options = self.get_file_options()?;
 
         writer
             .start_file(entry_name, options)
@@ -157,16 +166,21 @@ impl PyZipWriter {
 
 impl PyZipWriter {
     /// Helper method to get file options with encryption if password is set
-    fn get_file_options(&self) -> FileOptions<'static, zip::write::ExtendedFileOptions> {
+    fn get_file_options(&self) -> PyResult<FileOptions<'static, zip::write::ExtendedFileOptions>> {
         let mut options = FileOptions::default().compression_method(CompressionMethod::Deflated);
 
         if let Some(password) = &self.password {
-            // Use the legacy ZipCrypto encryption from the unstable API
-            // This is available without enabling a feature flag
-            options = options.with_deprecated_encryption(password);
+            // Use the legacy ZipCrypto encryption from the unstable API. It is
+            // available regardless of the `aes-crypto` feature, which is why
+            // this crate can build zip without its default features.
+            // Since zip 3 this returns a Result and does the empty-password
+            // check that the constructor above duplicates for a better error.
+            options = options
+                .with_deprecated_encryption(password)
+                .map_err(|e| PyValueError::new_err(format!("Invalid ZipCrypto password: {e}")))?;
         }
 
-        options
+        Ok(options)
     }
 }
 

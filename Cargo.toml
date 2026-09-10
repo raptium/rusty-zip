@@ -21,7 +21,10 @@ crate-type = ["cdylib"]
 [dependencies]
 pyo3 = { version = "0.29", features = ["extension-module"] }
 pyo3-file = "0.17.0"
-# Pinned exactly because ZipCrypto writing uses the `unstable` API.
-# Must stay >= 2.3.0: that fixes CVE-2025-29787 / RUSTSEC-2025-0168, and
-# 2.1.3-2.2.3 were yanked because of it.
-zip = { version = "=2.4.2" }
+# Pinned exactly because ZipCrypto writing uses zip's `unstable` API, whose own
+# docs require an exact version specifier.
+# `default-features = false` because this crate only ever writes Deflated +
+# ZipCrypto: the default feature set also pulls in AES, bzip2, zstd, lzma and
+# ppmd (several of them C libraries), and `aes` would raise the MSRV to 1.89.
+# `time` must stay enabled, otherwise entries are dated 1980-01-01.
+zip = { version = "=8.6.0", default-features = false, features = ["deflate", "time"] }
