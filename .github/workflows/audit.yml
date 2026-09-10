@@ -1,0 +1,30 @@
+name: Security audit
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  schedule:
+    # Re-check weekly so advisories published after the last commit are caught.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cargo-audit:
+    name: cargo audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      # `--deny warnings` also fails on yanked and unsound crates, not only on
+      # vulnerabilities: a yanked dependency is exactly what this job is
+      # meant to catch.
+      - name: Audit dependencies
+        run: cargo audit --deny warnings

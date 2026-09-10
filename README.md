@@ -23,7 +23,7 @@ This project is not intended to be a full-featured Python ZIP library (there are
 ## Requirements
 
 - Python 3.9 or later
-- Rust 1.83 or later (for building from source)
+- Rust 1.88 or later (for building from source)
 
 ## Installation
 
