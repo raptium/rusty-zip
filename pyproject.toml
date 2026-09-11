@@ -16,7 +16,7 @@ maintainers = [
 ]
 keywords = ["zip", "compression", "zipcrypto", "rust"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Rust",
@@ -31,9 +31,6 @@ classifiers = [
     "Topic :: System :: Archiving :: Compression",
 ]
 dynamic = ["version"]
-dependencies = [
-    "maturin>=1.8.3",
-]
 
 [tool.uv]
 cache-keys = [{file = "pyproject.toml"}, {file = "Cargo.toml"}, {file = "src/*.rs"}]
@@ -49,6 +46,7 @@ python_files = ["test_*.py", "test.py"]
 
 [dependency-groups]
 dev = [
+  "maturin>=1.8.3",
   "maturin-import-hook>=0.1.0",
   "pytest >=8.1.1,<9",
   "pre-commit>=3.6.0",
