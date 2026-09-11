@@ -1,6 +1,6 @@
 [package]
 name = "rusty-zip"
-version = "0.1.0"
+version = "0.2.0-alpha.1"
 edition = "2021"
 # Driven by pyo3 0.29 (1.83) and, more strictly, `time` >= 0.3.47 (1.88),
 # which zip's default features pull in. Do not lower without checking both.

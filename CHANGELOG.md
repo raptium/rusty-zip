@@ -6,6 +6,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Versions are normalised to [PEP 440](https://peps.python.org/pep-0440/) on PyPI,
 so `0.1.0-alpha.2` appears there as `0.1.0a2`.
 
+## [Unreleased]
+
 ## [0.1.0] - 2026-09-10
 
 First stable release. The `0.1.0-alpha.*` pre-releases are superseded and the
@@ -77,6 +79,7 @@ Initial pre-release.
 - `ZipWriter` writing Deflated entries with optional legacy ZipCrypto
   encryption, from either a path or a file-like object.
 
+[Unreleased]: https://github.com/raptium/rusty-zip/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/raptium/rusty-zip/releases/tag/v0.1.0
 [0.1.0-alpha.2]: https://github.com/raptium/rusty-zip/releases/tag/v0.1.0-alpha.2
 [0.1.0-alpha.1]: https://github.com/raptium/rusty-zip/releases/tag/v0.1.0-alpha.1
