@@ -251,12 +251,10 @@ wheels = [
 [[package]]
 name = "rusty-zip"
 source = { editable = "." }
-dependencies = [
-    { name = "maturin" },
-]
 
 [package.dev-dependencies]
 dev = [
+    { name = "maturin" },
     { name = "maturin-import-hook" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -264,10 +262,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "maturin", specifier = ">=1.8.3" }]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "maturin", specifier = ">=1.8.3" },
     { name = "maturin-import-hook", specifier = ">=0.1.0" },
     { name = "pre-commit", specifier = ">=3.6.0" },
     { name = "pytest", specifier = ">=8.1.1,<9" },
