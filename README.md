@@ -65,7 +65,7 @@ zip_content = file_like.getvalue()
 
 #### Constructor
 
-- `ZipWriter(path_or_file_like: Union[str, BinaryIO], password: Optional[bytes] = None)` - Creates a new ZIP file. The first argument can be either a path string or a file-like object that supports binary I/O operations. If a password is provided, files will be encrypted using ZipCrypto. The password must be bytes.
+- `ZipWriter(path_or_file_like: Union[str, BinaryIO], password: Optional[bytes] = None)` - Creates a new ZIP file. The first argument can be either a path string or a file-like object that supports binary I/O operations. If a password is provided, files will be encrypted using ZipCrypto. The password must be non-empty bytes; an empty password is rejected because it derives a predictable key.
 
 #### Methods
 
