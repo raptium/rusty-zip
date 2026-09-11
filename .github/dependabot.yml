@@ -1,0 +1,64 @@
+version: 2
+
+updates:
+  # Actions are pinned to commit SHAs, so nothing else will ever move them.
+  # Without this they silently rot, which is exactly how we ended up running
+  # Node 20 actions until they were two weeks from being removed.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "ci"
+    labels: ["dependencies", "github-actions"]
+
+  # Rust dependencies: pyo3, pyo3-file, zip. Note that zip is pinned to an exact
+  # version because ZipCrypto writing uses zip's `unstable` API, and upstream
+  # requires an exact specifier for it - so even a patch bump there is a real
+  # change to review, not a routine one.
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    groups:
+      cargo:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "chore"
+    labels: ["dependencies", "rust"]
+
+  # Python side: uv.lock plus the [dependency-groups] dev tools.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    groups:
+      python:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "chore"
+    labels: ["dependencies", "python"]
+
+  # pre-commit hook revisions (ruff-pre-commit is still on v0.3.4).
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "chore"
+    labels: ["dependencies", "pre-commit"]
