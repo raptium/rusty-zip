@@ -19,7 +19,7 @@ name = "rusty_zip"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.29", features = ["extension-module"] }
+pyo3 = { version = "0.29.3", features = ["extension-module"] }
 pyo3-file = "0.17.0"
 # Pinned exactly because ZipCrypto writing uses zip's `unstable` API, whose own
 # docs require an exact version specifier.
@@ -27,4 +27,4 @@ pyo3-file = "0.17.0"
 # ZipCrypto: the default feature set also pulls in AES, bzip2, zstd, lzma and
 # ppmd (several of them C libraries), and `aes` would raise the MSRV to 1.89.
 # `time` must stay enabled, otherwise entries are dated 1980-01-01.
-zip = { version = "=8.6.0", default-features = false, features = ["deflate", "time"] }
+zip = { version = "=9.2.1", default-features = false, features = ["deflate", "time"] }
