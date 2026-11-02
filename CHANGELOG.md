@@ -8,6 +8,25 @@ so `0.1.0-alpha.2` appears there as `0.1.0a2`.
 
 ## [Unreleased]
 
+### Changed
+
+- `zip` upgraded from 8.6.0 to 9.2.1. 8.6.0 is affected by RUSTSEC-2026-0367,
+  -0368 and -0369, all in `extract()` paths this crate never calls; 9.2.1 is the
+  current release containing the fixes, so the security audit is clean again.
+  `zip` 9 added a filename lifetime to `FileOptions`, which is the only source
+  change needed.
+- `pyo3` upgraded from 0.29.2 to 0.29.3. pyo3-ffi 0.29.2 mis-gated an FFI import
+  for PyPy, which broke the PyPy 3.12 wheels on aarch64 and armv7.
+
+### Fixed
+
+- CI: the pytest job no longer uses `actions/setup-python`. uv provisions the
+  3.9/3.12/3.14 interpreters itself, because setup-python has no 3.9 build for
+  the Ubuntu 26.04 runner images that `ubuntu-latest` now points at.
+- CI: the dev dependency group scopes `pre-commit` to Python >= 3.10, which keeps
+  the uv lockfile resolvable for both uv and Dependabot while the runtime still
+  supports Python 3.9.
+
 ## [0.1.0] - 2026-09-10
 
 First stable release. The `0.1.0-alpha.*` pre-releases are superseded and the

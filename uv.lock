@@ -1,6 +1,10 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.9"
+resolution-markers = [
+    "python_full_version >= '3.10'",
+    "python_full_version < '3.10'",
+]
 
 [[package]]
 name = "cfgv"
@@ -257,7 +261,7 @@ source = { editable = "." }
 dev = [
     { name = "maturin" },
     { name = "maturin-import-hook" },
-    { name = "pre-commit" },
+    { name = "pre-commit", marker = "python_full_version >= '3.10'" },
     { name = "pytest" },
     { name = "ruff" },
 ]
@@ -268,7 +272,7 @@ dev = [
 dev = [
     { name = "maturin", specifier = ">=1.8.3" },
     { name = "maturin-import-hook", specifier = ">=0.1.0" },
-    { name = "pre-commit", specifier = ">=3.6.0" },
+    { name = "pre-commit", marker = "python_full_version >= '3.10'", specifier = ">=3.6.0" },
     { name = "pytest", specifier = ">=8.1.1,<9" },
     { name = "ruff", specifier = ">=0.3.0" },
 ]

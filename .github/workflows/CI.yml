@@ -11,7 +11,10 @@
 #     attest-build-provenance is now folded into actions/attest). All of them
 #     are Node 24; Dependabot advances them from here
 #   - the `test` job runs the pytest suite on the lowest, a middle and the
-#     latest supported Python version, and `release` depends on it
+#     latest supported Python version, and `release` depends on it; it does
+#     NOT use actions/setup-python: uv provisions the matrix interpreters via
+#     `uv run --python ...` (setup-python cannot provide 3.9 on Ubuntu 26.04+
+#     runner images, and the matrix must not depend on the image's Pythons)
 #
 name: CI
 
@@ -180,14 +183,11 @@ jobs:
           - "3.14"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: true
       - name: Run test suite
-        run: uv run --python ${{ matrix.python-version }} --python-preference only-system --locked pytest -q
+        run: uv run --python ${{ matrix.python-version }} --locked pytest -q
 
   release:
     name: Release

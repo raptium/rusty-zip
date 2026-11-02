@@ -165,8 +165,14 @@ impl PyZipWriter {
 }
 
 impl PyZipWriter {
-    /// Helper method to get file options with encryption if password is set
-    fn get_file_options(&self) -> PyResult<FileOptions<'static, zip::write::ExtendedFileOptions>> {
+    /// Helper method to get file options with encryption if password is set.
+    ///
+    /// The options borrow `self.password` for the ZipCrypto key derivation (zip 9's
+    /// `FileOptionsExt` ties the output to the password's lifetime), so the key
+    /// lifetime here has to come from `&self` rather than being `'static`.
+    fn get_file_options(
+        &self,
+    ) -> PyResult<FileOptions<'_, 'static, zip::write::ExtendedFileOptions>> {
         let mut options = FileOptions::default().compression_method(CompressionMethod::Deflated);
 
         if let Some(password) = &self.password {
